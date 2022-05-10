@@ -17,6 +17,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var fifthTxtField: UITextField!
     @IBOutlet weak var currentNumberOfChars: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
+    @IBOutlet weak var firstValidationLabel: UILabel!
+    @IBOutlet weak var secondValidationLabel: UILabel!
+    @IBOutlet weak var thirdValidationLabel: UILabel!
+    @IBOutlet weak var fourthValidationLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         firstTxtField.delegate = self
@@ -25,12 +29,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         fourthTxtField.delegate = self
         fifthTxtField.delegate = self
         progressBar.transform = progressBar.transform.scaledBy(x: 1, y: 3)
-        var informationLabel = UILabel()
-        informationLabel.frame = CGRect(x: 0, y: 0, width: 138, height: 88)
-        informationLabel.backgroundColor = .white
         self.progressBar.setProgress(0, animated: true)
+        self.firstValidationLabel.text = "- minimum of 8 characters."
+        self.secondValidationLabel.text = "- minimum 1 digit."
+        self.thirdValidationLabel.text = "- minimum 1 lowercased."
+        self.fourthValidationLabel.text = "- minimum 1 uppercased."
     }
-    @objc func getHintsFromTextField(textField: UITextField) -> Bool{
+    @objc func urlOpen(textField: UITextField) -> Bool{
         let urlLink = fourthTxtField.text
         
         guard let urlLink = urlLink else {
@@ -79,7 +84,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }else if textField == fourthTxtField {
-
+            
             let urlLink = fourthTxtField.text
             
             guard let urlLink = urlLink else {
@@ -89,61 +94,63 @@ class ViewController: UIViewController, UITextFieldDelegate {
             if urlLink.contains("https") {
                 NSObject.cancelPreviousPerformRequests(
                     withTarget: self,
-                    selector: #selector(ViewController.getHintsFromTextField),
+                    selector: #selector(ViewController.urlOpen),
                     object: textField)
                 self.perform(
-                    #selector(ViewController.getHintsFromTextField),
+                    #selector(ViewController.urlOpen),
                     with: textField,
                     afterDelay: 4)
                 return true
             }
-
-            //UIApplication.shared.open(url)
-//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) {
-//                UIApplication.shared.open(url)
-//            }
-            //}
-            
         }else if textField == fifthTxtField {
-                guard let fifthText = fifthTxtField.text else {return false}
-                    if fifthText.count < 8
-                    {
-                        print( "Password must be at least 8 characters")
-                    }
-                    if containsDigit(fifthText)
-                    {
-                        print( "Password must contain at least 1 digit")
-                    }
-                    if containsLowerCase(fifthText)
-                    {
-                        print( "Password must contain at least 1 lowercase character")
-                    }
-                    if containsUpperCase(fifthText)
-                    {
-                        print( "Password must contain at least 1 uppercase character")
-                        
-                    }
-                func containsDigit(_ value: String) -> Bool
-                {
-                    let reqularExpression = ".*[0-9]+.*"
-                    let predicate = NSPredicate(format: "SELF MATCHES %@", reqularExpression)
-                    return !predicate.evaluate(with: value)
-                }
+            guard let fifthText = fifthTxtField.text else {return false}
+            if fifthText.count > 8
+            {
+                print( "Password must be at least 8 characters")
+                firstValidationLabel.text = "✓ minimum of 8 characters."
+                firstValidationLabel.textColor = UIColor.green
                 
-                func containsLowerCase(_ value: String) -> Bool
-                {
-                    let reqularExpression = ".*[a-z]+.*"
-                    let predicate = NSPredicate(format: "SELF MATCHES %@", reqularExpression)
-                    return !predicate.evaluate(with: value)
-                }
+            }
+            if containsDigit(fifthText)
+            {
+                print( "Password must contain at least 1 digit")
+                secondValidationLabel.text = "✓ minimum 1 digit."
+                secondValidationLabel.textColor = UIColor.green
+            }
+            if containsLowerCase(fifthText)
+            {
+                print( "Password must contain at least 1 lowercase character")
+                thirdValidationLabel.text = "✓ minimum 1 lowercase."
+                thirdValidationLabel.textColor = UIColor.green
                 
-                func containsUpperCase(_ value: String) -> Bool
-                {
-                    let reqularExpression = ".*[A-Z]+.*"
-                    let predicate = NSPredicate(format: "SELF MATCHES %@", reqularExpression)
-                    return !predicate.evaluate(with: value)
-                }
-
+            }
+            if containsUpperCase(fifthText)
+            {
+                print( "Password must contain at least 1 uppercase character")
+                fourthValidationLabel.text = "✓ minimum 1 uppercase."
+                fourthValidationLabel.textColor = UIColor.green
+            }
+            func containsDigit(_ value: String) -> Bool
+            {
+                let reqularExpression = ".*[0-9]+.*"
+                let predicate = NSPredicate(format: "SELF MATCHES %@", reqularExpression)
+                return predicate.evaluate(with: value)
+            }
+            
+            func containsLowerCase(_ value: String) -> Bool
+            {
+                let reqularExpression = ".*[a-z]+.*"
+                let predicate = NSPredicate(format: "SELF MATCHES %@", reqularExpression)
+                return predicate.evaluate(with: value)
+            }
+            
+            func containsUpperCase(_ value: String) -> Bool
+            {
+                let reqularExpression = ".*[A-Z]+.*"
+                let predicate = NSPredicate(format: "SELF MATCHES %@", reqularExpression)
+                return predicate.evaluate(with: value)
+            }
+            
         }
         return true
     }
