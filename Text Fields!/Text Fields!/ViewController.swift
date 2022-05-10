@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import Foundation
 
 class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var firstTxtField: UITextField!
@@ -28,7 +29,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         informationLabel.frame = CGRect(x: 0, y: 0, width: 138, height: 88)
         informationLabel.backgroundColor = .white
         self.progressBar.setProgress(0, animated: true)
+    }
+    @objc func getHintsFromTextField(textField: UITextField) -> Bool{
+        let urlLink = fourthTxtField.text
         
+        guard let urlLink = urlLink else {
+            return false
+        }
+        guard let url = URL(string: urlLink) else {return false}
+        UIApplication.shared.open(url)
+        return true
     }
     //MARK:- UITextFieldDelegate
     internal func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String)->Bool {
@@ -75,10 +85,25 @@ class ViewController: UIViewController, UITextFieldDelegate {
             guard let urlLink = urlLink else {
                 return false
             }
-            guard let url = URL(string: urlLink) else {return true}
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-                UIApplication.shared.open(url)
+            
+            if urlLink.contains("https") {
+                NSObject.cancelPreviousPerformRequests(
+                    withTarget: self,
+                    selector: #selector(ViewController.getHintsFromTextField),
+                    object: textField)
+                self.perform(
+                    #selector(ViewController.getHintsFromTextField),
+                    with: textField,
+                    afterDelay: 4)
+                return true
             }
+
+            //UIApplication.shared.open(url)
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) {
+//                UIApplication.shared.open(url)
+//            }
+            //}
+            
         }else if textField == fifthTxtField {
                 guard let fifthText = fifthTxtField.text else {return false}
                     if fifthText.count < 8
