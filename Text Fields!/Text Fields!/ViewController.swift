@@ -104,31 +104,43 @@ class ViewController: UIViewController, UITextFieldDelegate {
             }
         }else if textField == fifthTxtField {
             guard let fifthText = fifthTxtField.text else {return false}
-            if fifthText.count > 8
+            if fifthText.count >= 7
             {
                 print( "Password must be at least 8 characters")
                 firstValidationLabel.text = "✓ minimum of 8 characters."
                 firstValidationLabel.textColor = UIColor.green
-                
+
+            }else {
+                firstValidationLabel.text = "- minimum of 8 characters."
+                firstValidationLabel.textColor = UIColor.black
+
             }
             if containsDigit(fifthText)
             {
                 print( "Password must contain at least 1 digit")
                 secondValidationLabel.text = "✓ minimum 1 digit."
                 secondValidationLabel.textColor = UIColor.green
+            }else {
+                secondValidationLabel.text = "- minimum 1 digit."
+                secondValidationLabel.textColor = UIColor.black
             }
             if containsLowerCase(fifthText)
             {
                 print( "Password must contain at least 1 lowercase character")
                 thirdValidationLabel.text = "✓ minimum 1 lowercase."
                 thirdValidationLabel.textColor = UIColor.green
-                
+            }else {
+                thirdValidationLabel.text = "- minimum 1 lowercase."
+                thirdValidationLabel.textColor = UIColor.black
             }
             if containsUpperCase(fifthText)
             {
                 print( "Password must contain at least 1 uppercase character")
                 fourthValidationLabel.text = "✓ minimum 1 uppercase."
                 fourthValidationLabel.textColor = UIColor.green
+            }else {
+                fourthValidationLabel.text = "- minimum 1 uppercase."
+                fourthValidationLabel.textColor = UIColor.black
             }
             func containsDigit(_ value: String) -> Bool
             {

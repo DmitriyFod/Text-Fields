@@ -37,9 +37,15 @@ class Text_Fields_UITests: XCTestCase {
             XCUIDevice.shared.press(.home)
             sleep(1)
             XCUIApplication().activate()
+            sleep(1)
         }
         let fifthTF = app.textFields["fifthT"]
         fifthTF.tap()
+        fifthTF.typeText("qdhlyr159@Aa")
+        XCTAssert(app.staticTexts["✓ minimum of 8 characters."].exists)
+        XCTAssert(app.staticTexts["✓ minimum 1 digit."].exists)
+        XCTAssert(app.staticTexts["✓ minimum 1 lowercase."].exists)
+        XCTAssert(app.staticTexts["✓ minimum 1 uppercase."].exists)
         
     }
         
